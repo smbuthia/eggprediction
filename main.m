@@ -1,5 +1,6 @@
 % This is the entry point file for the project
-
+% Clear all variables.
+clear;
 % Read the .png image files in the grayscale folder into a file name vector.
 imageFilesList =  glob('grayscale/*.png');
 
@@ -12,7 +13,7 @@ randVec = randperm(mAll);
 for i = 1:mAll
     fileName = imageFilesList(randVec(i)){1,1};
     % Replace the backslash character with forward slash to avoid errors due to special characters.
-    fileName(fileName == "\\") = "/"; 
+    fileName(fileName == "\\") = "/";
     % Load the image into a vector
     X(i,:) = loadImageVector(fileName, 0.01);
     
@@ -20,10 +21,10 @@ for i = 1:mAll
     fileName = strsplit(fileName, '/');
     fname = fileName{1,2};
     % Female eggs are labelled 1 all others are 0 :)
-    if(regexp(fname, 'F*') == 1)
-        y(i) == 1;
+    if(regexp(fname, "F*") == 1)
+        y(i) = 1;
     else
-        y(i) == 0;
+        y(i) = 0;
     endif
 end
 
