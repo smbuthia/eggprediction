@@ -48,5 +48,11 @@ y_train = yAll(1:m_train,:);
 y_cv = yAll(m_train+1:m_train+m_cv,:);
 y_test = yAll(m_train+m_cv+1:m_train+m_cv+m_test,:);
 
+% We now initialize Theta1 and Theta2.
+% The architecture of the neural network is such that it has three layers.
+% One input layer, one hidden layer, and one output layer with one unit.
+INIT_EPSILON = 0.5
+Theta1 = rand(n, n+1) * (2 * INIT_EPSILON) - INIT_EPSILON;
+Theta2 = rand(1, n+1) * (2 * INIT_EPSILON) - INIT_EPSILON;
 
 
