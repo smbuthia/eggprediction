@@ -23,13 +23,13 @@ for i = 1:mAll
     fileName = strsplit(fileName, '/');
     fname = fileName{1,2};
     % Female eggs are labelled 1 all others are 0 :)
-    if(regeXAllp(fname, "F*") == 1)
+    if(regexp(fname, "F*") == 1)
         yAll(i) = 1;
     else
         yAll(i) = 0;
     endif
 end
-% Get the number of input feature
+% Get the number of input features
 n = size(XAll)(:,2);
 
 % We now have the input matrix XAll and output vector yAll.
@@ -41,18 +41,49 @@ m_cv = 0.2 * mAll;
 m_test = m_cv;
 % The input matrices.
 X_train = XAll(1:m_train,:);
-X_cv = XAll(m_train+1:m_train+m_cv,:);
-X_test = XAll(m_train+m_cv+1:m_train+m_cv+m_test,:) zeros(m_test,n);
+X_cv = XAll((m_train+1):(m_train+m_cv),:);
+X_test = XAll((m_train+m_cv+1):(m_train+m_cv+m_test),:);
 % The output vectors.
 y_train = yAll(1:m_train,:);
-y_cv = yAll(m_train+1:m_train+m_cv,:);
-y_test = yAll(m_train+m_cv+1:m_train+m_cv+m_test,:);
+y_cv = yAll((m_train+1):(m_train+m_cv),:);
+y_test = yAll((m_train+m_cv+1):(m_train+m_cv+m_test),:);
+
+fprintf(['All training data, cross-validation data,'... 
+        'and test data is loaded \n'...
+		'\nPress any key to proceed\n']);
+pause;
+
+% Some parameters that we will use
+input_layer_size = n;
+hidden_layer_size = 30;
+final_layer_size = 1; % the output will be a 0 or a 1
+
+
+
 
 % We now initialize Theta1 and Theta2.
 % The architecture of the neural network is such that it has three layers.
 % One input layer, one hidden layer, and one output layer with one unit.
-INIT_EPSILON = 0.5
-Theta1 = rand(n, n+1) * (2 * INIT_EPSILON) - INIT_EPSILON;
-Theta2 = rand(1, n+1) * (2 * INIT_EPSILON) - INIT_EPSILON;
+init_theta1 = initializeWeights(input_layer_size, hidden_layer_size);
+init_theta2 = initializeWeights(hidden_layer_size, final_layer_size);
 
+init_weights = [init_theta1(:); init_theta2(:)];
 
+fprintf('Random weights initialized\n\nPress any key to continue.\n');
+pause;
+
+% Regularization parameter 
+lambda = 0;
+
+% The calculated cost
+J = costFunctionReg(init_weights,...
+                    input_layer_size,...
+					hidden_layer_size,...
+					final_layer_size,...
+					X_train,...
+					y_train,...
+					lambda);
+
+fprintf(['\nInitial cost is found to be: %f'...
+        '\n\nPress any key to finish\n'], J);
+pause;
