@@ -12,12 +12,14 @@ mAll = length(imageFilesList);
 yAll = zeros(mAll,1);
 % Randomize the file list.
 randVec = randperm(mAll);
+% Image scale - determines by how much the loaded image is scaled.
+image_scale = 0.1;
 for i = 1:mAll
     fileName = imageFilesList(randVec(i)){1,1};
     % Replace the backslash character with forward slash to avoid errors due to special characters.
     fileName(fileName == "\\") = "/";
     % Load the image into a vector
-    XAll(i,:) = loadImageVector(fileName, 0.01);
+    XAll(i,:) = loadImageVector(fileName, image_scale);
     
     % Check from the file name whether image is from male or female egg
     fileName = strsplit(fileName, '/');
@@ -110,3 +112,8 @@ Theta2 = reshape(params(((hidden_layer_size * (input_layer_size + 1)) + 1):end),
 prediction = predict(Theta1, Theta2, X_train);
 
 fprintf('\nTraining Set Accuracy: %f\n', mean(double(prediction == y_train)) * 100);
+
+% Predict the outcome against the cross-validation set
+prediction_cv = predict(Theta1, Theta2, X_cv);
+
+fprintf('\nCross Validation Set Accuracy: %f\n', mean(double(prediction_cv == y_cv)) * 100);
